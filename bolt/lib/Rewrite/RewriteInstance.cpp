@@ -321,15 +321,16 @@ RewriteInstance::RewriteInstance(ELFObjectFileBase *File, const int Argc,
     : InputFile(File), Argc(Argc), Argv(Argv), ToolPath(ToolPath),
       SHStrTab(StringTableBuilder::ELF) {
   ErrorAsOutParameter EAO(&Err);
-  auto ELF64LEFile = dyn_cast<ELF64LEObjectFile>(InputFile);
-  if (!ELF64LEFile) {
+  ELF32LEObjectFile *ELF32LEFile = dyn_cast<ELF32LEObjectFile>(InputFile);
+  if (!ELF32LEFile) {
     Err = createStringError(errc::not_supported,
-                            "Only 64-bit LE ELF binaries are supported");
-    return;
+                            "Only 32-bit LE ELF binaries are supported");
+  return;
   }
 
+
   bool IsPIC = false;
-  const ELFFile<ELF64LE> &Obj = ELF64LEFile->getELFFile();
+  const ELFFile<ELF32LE> &Obj = ELF32LEFile->getELFFile();
   if (Obj.getHeader().e_type != ELF::ET_EXEC) {
     Stdout << "BOLT-INFO: shared object or position-independent executable "
               "detected\n";
