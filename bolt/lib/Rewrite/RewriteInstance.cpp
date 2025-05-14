@@ -290,7 +290,8 @@ MCPlusBuilder *createMCPlusBuilder(const Triple::ArchType Arch,
 } // namespace bolt
 } // namespace llvm
 
-using ELF64LEPhdrTy = ELF64LEFile::Elf_Phdr;
+using ELF32LEPhdrTy = ELF32LEFile::Elf_Phdr;
+
 
 namespace {
 
@@ -458,9 +459,9 @@ static bool checkVMA(const typename ELFT::Phdr &Phdr,
 }
 
 void RewriteInstance::markGnuRelroSections() {
-  using ELFT = ELF64LE;
+  using ELFT = ELF32LE;
   using ELFShdrTy = typename ELFObjectFile<ELFT>::Elf_Shdr;
-  auto ELF64LEFile = cast<ELF64LEObjectFile>(InputFile);
+  auto ELF32LEFile = cast<ELF32LEObjectFile>(InputFile);
   const ELFFile<ELFT> &Obj = ELF64LEFile->getELFFile();
 
   auto handleSection = [&](const ELFT::Phdr &Phdr, SectionRef SecRef) {
@@ -504,19 +505,20 @@ Error RewriteInstance::discoverStorage() {
   NamedRegionTimer T("discoverStorage", "discover storage", TimerGroupName,
                      TimerGroupDesc, opts::TimeRewrite);
 
-  auto ELF64LEFile = cast<ELF64LEObjectFile>(InputFile);
-  const ELFFile<ELF64LE> &Obj = ELF64LEFile->getELFFile();
+  auto ELF32LEFile = cast<ELF32LEObjectFile>(InputFile);
+  const ELFFile<ELF32LE> &Obj = ELF32LEFile->getELFFile();
+
 
   BC->StartFunctionAddress = Obj.getHeader().e_entry;
 
   NextAvailableAddress = 0;
   uint64_t NextAvailableOffset = 0;
-  Expected<ELF64LE::PhdrRange> PHsOrErr = Obj.program_headers();
+  Expected<ELF32LE::PhdrRange> PHsOrErr = Obj.program_headers();
   if (Error E = PHsOrErr.takeError())
     return E;
 
-  ELF64LE::PhdrRange PHs = PHsOrErr.get();
-  for (const ELF64LE::Phdr &Phdr : PHs) {
+  ELF32LE::PhdrRange PHs = PHsOrErr.get();
+  for (const ELF32LE::Phdr &Phdr : PHs) {
     switch (Phdr.p_type) {
     case ELF::PT_LOAD:
       BC->FirstAllocAddress = std::min(BC->FirstAllocAddress,
@@ -618,8 +620,8 @@ Error RewriteInstance::discoverStorage() {
     unsigned Phnum = Obj.getHeader().e_phnum;
     Phnum += 3;
 
-    NextAvailableAddress += Phnum * sizeof(ELF64LEPhdrTy);
-    NextAvailableOffset += Phnum * sizeof(ELF64LEPhdrTy);
+    NextAvailableAddress += Phnum * sizeof(ELF32LEPhdrTy);
+    NextAvailableOffset += Phnum * sizeof(ELF32LEPhdrTy);
   }
 
   // Align at cache line.
@@ -1424,15 +1426,16 @@ void RewriteInstance::registerFragments() {
 
   // The first global symbol is identified by the symbol table sh_info value.
   // Used as local symbol search stopping point.
-  auto *ELF64LEFile = cast<ELF64LEObjectFile>(InputFile);
-  const ELFFile<ELF64LE> &Obj = ELF64LEFile->getELFFile();
+  auto *ELF32LEFile = cast<ELF32LEObjectFile>(InputFile);
+  const ELFFile<ELF32LE> &Obj = ELF32LEFile->getELFFile();
+
   auto *SymTab = llvm::find_if(cantFail(Obj.sections()), [](const auto &Sec) {
     return Sec.sh_type == ELF::SHT_SYMTAB;
   });
   assert(SymTab);
   // Symtab sh_info contains the value one greater than the symbol table index
   // of the last local symbol.
-  ELFSymbolRef LocalSymEnd = ELF64LEFile->toSymbolRef(SymTab, SymTab->sh_info);
+  ELFSymbolRef LocalSymEnd = ELF32LEFile->toSymbolRef(SymTab, SymTab->sh_info);
 
   for (auto &Fragment : AmbiguousFragments) {
     const StringRef &ParentName = Fragment.first;
@@ -2105,7 +2108,7 @@ int64_t getRelocationAddend(const ELFObjectFile<ELFT> *Obj,
 
 int64_t getRelocationAddend(const ELFObjectFileBase *Obj,
                             const RelocationRef &Rel) {
-  return getRelocationAddend(cast<ELF64LEObjectFile>(Obj), Rel);
+  return getRelocationAddend(cast<ELF32LEObjectFile>(Obj), Rel);
 }
 
 template <typename ELFT>
@@ -2132,7 +2135,7 @@ uint32_t getRelocationSymbol(const ELFObjectFile<ELFT> *Obj,
 
 uint32_t getRelocationSymbol(const ELFObjectFileBase *Obj,
                              const RelocationRef &Rel) {
-  return getRelocationSymbol(cast<ELF64LEObjectFile>(Obj), Rel);
+  return getRelocationSymbol(cast<ELF32LEObjectFile>(Obj), Rel);
 }
 } // anonymous namespace
 
@@ -3942,8 +3945,8 @@ void RewriteInstance::updateOutputValues(const BOLTLinker &Linker) {
 }
 
 void RewriteInstance::patchELFPHDRTable() {
-  auto ELF64LEFile = cast<ELF64LEObjectFile>(InputFile);
-  const ELFFile<ELF64LE> &Obj = ELF64LEFile->getELFFile();
+  auto ELF32LEFile = cast<ELF64LEObjectFile>(InputFile);
+  const ELFFile<EL32LE> &Obj = ELF64LEFile->getELFFile();
   raw_fd_ostream &OS = Out->os();
 
   // Write/re-write program headers.
@@ -3979,7 +3982,7 @@ void RewriteInstance::patchELFPHDRTable() {
   OS.seek(PHDRTableOffset);
 
   auto createNewTextPhdr = [&]() {
-    ELF64LEPhdrTy NewPhdr;
+    ELF32LEPhdrTy NewPhdr;
     NewPhdr.p_type = ELF::PT_LOAD;
     if (PHDRTableAddress) {
       NewPhdr.p_offset = PHDRTableOffset;
@@ -4005,12 +4008,12 @@ void RewriteInstance::patchELFPHDRTable() {
 
   auto writeNewSegmentPhdrs = [&]() {
     if (PHDRTableAddress || NewTextSegmentSize) {
-      ELF64LE::Phdr NewPhdr = createNewTextPhdr();
+      ELF32LE::Phdr NewPhdr = createNewTextPhdr();
       OS.write(reinterpret_cast<const char *>(&NewPhdr), sizeof(NewPhdr));
     }
 
     if (NewWritableSegmentSize) {
-      ELF64LEPhdrTy NewPhdr;
+      ELF32LEPhdrTy NewPhdr;
       NewPhdr.p_type = ELF::PT_LOAD;
       NewPhdr.p_offset = getFileOffsetForAddress(NewWritableSegmentAddress);
       NewPhdr.p_vaddr = NewWritableSegmentAddress;
@@ -4027,8 +4030,8 @@ void RewriteInstance::patchELFPHDRTable() {
   bool AddedSegment = false;
 
   // Copy existing program headers with modifications.
-  for (const ELF64LE::Phdr &Phdr : cantFail(Obj.program_headers())) {
-    ELF64LE::Phdr NewPhdr = Phdr;
+  for (const ELF32LE::Phdr &Phdr : cantFail(Obj.program_headers())) {
+    ELF32LE::Phdr NewPhdr = Phdr;
     switch (Phdr.p_type) {
     case ELF::PT_PHDR:
       if (PHDRTableAddress) {
@@ -4103,8 +4106,8 @@ uint64_t appendPadding(raw_pwrite_stream &OS, uint64_t Offset,
 }
 
 void RewriteInstance::rewriteNoteSections() {
-  auto ELF64LEFile = cast<ELF64LEObjectFile>(InputFile);
-  const ELFFile<ELF64LE> &Obj = ELF64LEFile->getELFFile();
+  auto ELF32LEFile = cast<ELF64LEObjectFile>(InputFile);
+  const ELFFile<ELF32LE> &Obj = ELF64LEFile->getELFFile();
   raw_fd_ostream &OS = Out->os();
 
   uint64_t NextAvailableOffset = std::max(
@@ -4112,13 +4115,13 @@ void RewriteInstance::rewriteNoteSections() {
   OS.seek(NextAvailableOffset);
 
   // Copy over non-allocatable section contents and update file offsets.
-  for (const ELF64LE::Shdr &Section : cantFail(Obj.sections())) {
+  for (const ELF32LE::Shdr &Section : cantFail(Obj.sections())) {
     if (Section.sh_type == ELF::SHT_NULL)
       continue;
     if (Section.sh_flags & ELF::SHF_ALLOC)
       continue;
 
-    SectionRef SecRef = ELF64LEFile->toSectionRef(&Section);
+    SectionRef SecRef = ELF32LEFile->toSectionRef(&Section);
     BinarySection *BSec = BC->getSectionForSectionRef(SecRef);
     assert(BSec && !BSec->isAllocatable() &&
            "Matching non-allocatable BinarySection should exist.");
