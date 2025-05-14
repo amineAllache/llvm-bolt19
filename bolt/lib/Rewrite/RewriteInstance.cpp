@@ -523,10 +523,17 @@ Error RewriteInstance::discoverStorage() {
     case ELF::PT_LOAD:
       BC->FirstAllocAddress = std::min(BC->FirstAllocAddress,
                                        static_cast<uint64_t>(Phdr.p_vaddr));
-      NextAvailableAddress = std::max(NextAvailableAddress,
-                                      Phdr.p_vaddr + Phdr.p_memsz);
-      NextAvailableOffset = std::max(NextAvailableOffset,
-                                     Phdr.p_offset + Phdr.p_filesz);
+                                             
+      NextAvailableAddress = std::max(
+            NextAvailableAddress,
+            static_cast<uint64_t>(Phdr.p_vaddr) +
+            static_cast<uint64_t>(Phdr.p_memsz));
+
+      NextAvailableOffset = std::max(
+            NextAvailableOffset,
+            static_cast<uint64_t>(Phdr.p_offset) +
+            static_cast<uint64_t>(Phdr.p_filesz));
+
 
       BC->SegmentMapInfo[Phdr.p_vaddr] = SegmentInfo{Phdr.p_vaddr,
                                                      Phdr.p_memsz,
@@ -3946,7 +3953,7 @@ void RewriteInstance::updateOutputValues(const BOLTLinker &Linker) {
 
 void RewriteInstance::patchELFPHDRTable() {
   auto ELF32LEFile = cast<ELF32LEObjectFile>(InputFile);
-  const ELFFile<EL32LE> &Obj = ELF32LEFile->getELFFile();
+  const ELFFile<ELF32LE> &Obj = ELF32LEFile->getELFFile();
   raw_fd_ostream &OS = Out->os();
 
   // Write/re-write program headers.
