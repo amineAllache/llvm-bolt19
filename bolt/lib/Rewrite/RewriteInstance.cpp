@@ -462,7 +462,7 @@ void RewriteInstance::markGnuRelroSections() {
   using ELFT = ELF32LE;
   using ELFShdrTy = typename ELFObjectFile<ELFT>::Elf_Shdr;
   auto ELF32LEFile = cast<ELF32LEObjectFile>(InputFile);
-  const ELFFile<ELFT> &Obj = ELF64LEFile->getELFFile();
+  const ELFFile<ELFT> &Obj = ELF32LEFile->getELFFile();
 
   auto handleSection = [&](const ELFT::Phdr &Phdr, SectionRef SecRef) {
     BinarySection *BinarySection = BC->getSectionForSectionRef(SecRef);
@@ -3945,8 +3945,8 @@ void RewriteInstance::updateOutputValues(const BOLTLinker &Linker) {
 }
 
 void RewriteInstance::patchELFPHDRTable() {
-  auto ELF32LEFile = cast<ELF64LEObjectFile>(InputFile);
-  const ELFFile<EL32LE> &Obj = ELF64LEFile->getELFFile();
+  auto ELF32LEFile = cast<ELF32LEObjectFile>(InputFile);
+  const ELFFile<EL32LE> &Obj = ELF32LEFile->getELFFile();
   raw_fd_ostream &OS = Out->os();
 
   // Write/re-write program headers.
@@ -4106,8 +4106,8 @@ uint64_t appendPadding(raw_pwrite_stream &OS, uint64_t Offset,
 }
 
 void RewriteInstance::rewriteNoteSections() {
-  auto ELF32LEFile = cast<ELF64LEObjectFile>(InputFile);
-  const ELFFile<ELF32LE> &Obj = ELF64LEFile->getELFFile();
+  auto ELF32LEFile = cast<ELF32LEObjectFile>(InputFile);
+  const ELFFile<ELF32LE> &Obj = ELF32LEFile->getELFFile();
   raw_fd_ostream &OS = Out->os();
 
   uint64_t NextAvailableOffset = std::max(
