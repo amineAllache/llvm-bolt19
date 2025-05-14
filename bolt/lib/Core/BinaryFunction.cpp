@@ -1287,6 +1287,8 @@ Error BinaryFunction::disassemble() {
 
       break;
     }
+    LLVM_DEBUG(dbgs() << "BOLT-DEBUG: Instruction = ");
+    LLVM_DEBUG(Instruction.dump());
 
     // Check integrity of LLVM assembler/disassembler.
     if (opts::CheckEncoding && !BC.MIB->isBranch(Instruction) &&
