@@ -190,6 +190,15 @@ Expected<std::unique_ptr<BinaryContext>> BinaryContext::createBinaryContext(
     FeaturesStr = Features->getString();
     break;
   }
+  case llvm::Triple::riscv32: {
+    ArchName = "riscv32";
+    if (!Features)
+      return createFatalBOLTError("RISCV 32-bit target needs SubtargetFeatures");
+    Features->AddFeature("relax");
+    FeaturesStr = Features->getString();
+    break;
+  }
+
   default:
     return createStringError(std::errc::not_supported,
                              "BOLT-ERROR: Unrecognized machine in ELF file");
