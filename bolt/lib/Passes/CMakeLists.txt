@@ -1,4 +1,9 @@
+include_directories(
+  ${CMAKE_SOURCE_DIR}/include
+)
+
 add_llvm_library(LLVMBOLTPasses
+  PassesModule.cpp 
   ADRRelaxationPass.cpp
   Aligner.cpp
   AllocCombiner.cpp
@@ -44,6 +49,10 @@ add_llvm_library(LLVMBOLTPasses
   ValidateMemRefs.cpp
   VeneerElimination.cpp
   RetpolineInsertion.cpp
+  ReachingDefAnalysis.cpp
+  SecSwiftReportPass.cpp
+  ReachingDefPass.cpp
+
 
   DISABLE_LLVM_LINK_LLVM_DYLIB
 
@@ -56,10 +65,12 @@ add_llvm_library(LLVMBOLTPasses
   Support
   TargetParser
   TransformUtils
-  )
+)
 
 target_link_libraries(LLVMBOLTPasses
   PRIVATE
   LLVMBOLTCore
   LLVMBOLTUtils
-  )
+  LLVMBOLTRewrite
+  LLVMBOLTProfile
+)

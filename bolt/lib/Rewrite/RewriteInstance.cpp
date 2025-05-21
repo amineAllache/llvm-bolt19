@@ -5,6 +5,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#include "bolt/Utils/CommandLineOpts.h"
+#include "bolt/Passes/ReachingDefAnalysis.h"
 
 #include "bolt/Rewrite/RewriteInstance.h"
 #include "bolt/Core/AddressMap.h"
@@ -57,6 +59,10 @@
 #include "llvm/Support/Timer.h"
 #include "llvm/Support/ToolOutputFile.h"
 #include "llvm/Support/raw_ostream.h"
+
+//
+#include "bolt/Utils/CommandLineOpts.h"
+//
 #include <algorithm>
 #include <fstream>
 #include <memory>
@@ -174,10 +180,6 @@ cl::opt<bool> PrintAll("print-all",
 cl::opt<bool> PrintProfile("print-profile",
                            cl::desc("print functions after attaching profile"),
                            cl::Hidden, cl::cat(BoltCategory));
-
-cl::opt<bool> PrintCFG("print-cfg",
-                       cl::desc("print functions after CFG construction"),
-                       cl::Hidden, cl::cat(BoltCategory));
 
 cl::opt<bool> PrintDisasm("print-disasm",
                           cl::desc("print function after disassembly"),
@@ -3423,6 +3425,12 @@ void RewriteInstance::runOptimizationPasses() {
   NamedRegionTimer T("runOptimizationPasses", "run optimization passes",
                      TimerGroupName, TimerGroupDesc, opts::TimeRewrite);
   BC->logBOLTErrorsAndQuitOnFatal(BinaryFunctionPassManager::runAllPasses(*BC));
+  errs() << "\n[🔧] Running ReachingDefAnalysis post-optimisation...\n";
+  ReachingDefAnalysis RDA;
+  for (auto &BFI : BC->getBinaryFunctions()) {
+    BinaryFunction &BF = BFI.second;
+    RDA.runOnFunction(*BC, BF);
+  }
 }
 
 void RewriteInstance::preregisterSections() {
@@ -5877,3 +5885,17 @@ bool RewriteInstance::isDebugSection(StringRef SectionName) {
 
   return false;
 }
+
+#include "bolt/Passes/SecSwiftReportPass.h"
+
+Error RewriteInstance::runSecSwiftReportPass() {
+   errs() << "[SecSwift] ⚙️  Executing SecSwiftReportPass...\n";
+
+   SecSwiftReportPass Pass;
+   Pass.runOnFunctions(*this);
+
+   errs() << "[SecSwift] ✅ Report completed.\n";
+   return Error::success();
+}
+
+

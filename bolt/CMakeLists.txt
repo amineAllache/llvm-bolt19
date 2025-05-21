@@ -131,8 +131,8 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}/include
   )
 
-add_subdirectory(lib)
-add_subdirectory(tools)
+
+
 
 if (BOLT_INCLUDE_TESTS)
   if (EXISTS ${LLVM_THIRD_PARTY_DIR}/unittest/googletest/include/gtest/gtest.h)
@@ -150,3 +150,9 @@ endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/bolt/RuntimeLibs/RuntimeLibraryVariables.inc.in
                ${CMAKE_CURRENT_BINARY_DIR}/include/bolt/RuntimeLibs/RuntimeLibraryVariables.inc @ONLY)
+
+
+add_subdirectory(runtime)
+add_subdirectory(lib)
+add_subdirectory(tools)
+

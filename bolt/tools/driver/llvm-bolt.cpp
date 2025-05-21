@@ -26,12 +26,17 @@
 #include "llvm/Support/PrettyStackTrace.h"
 #include "llvm/Support/Signals.h"
 #include "llvm/Support/TargetSelect.h"
-
+//
+#include "bolt/Utils/CommandLineOpts.h"
+//
 #define DEBUG_TYPE "bolt"
 
 using namespace llvm;
 using namespace object;
 using namespace bolt;
+
+
+
 
 namespace opts {
 
@@ -62,6 +67,8 @@ BoltProfile("b",
   cl::desc("alias for -data"),
   cl::aliasopt(InputDataFilename),
   cl::cat(BoltCategory));
+
+
 
 cl::opt<std::string>
     LogFile("log-file",
@@ -124,11 +131,17 @@ void perf2boltMode(int argc, char **argv) {
            << "': expected valid perf.data file.\n";
     exit(1);
   }
-  if (opts::OutputFilename.empty()) {
-    errs() << ToolName << ": expected -o=<output file> option.\n";
-    exit(1);
-  }
-  opts::AggregateOnly = true;
+	if (!opts::SecSwiftReport && opts::OutputFilename.empty()) {
+		errs() << ToolName << ": expected -o=<output file> option.\n";
+		exit(1);
+	}
+
+	if (opts::SecSwiftReport) {
+		outs() << "[SecSwift] Option -o ignorée car -secswift-report est activé.\n";
+	}
+
+	opts::AggregateOnly = true;
+
 }
 
 void boltDiffMode(int argc, char **argv) {
@@ -166,7 +179,9 @@ void boltMode(int argc, char **argv) {
   cl::ParseCommandLineOptions(argc, argv,
                               "BOLT - Binary Optimization and Layout Tool\n");
 
-  if (opts::OutputFilename.empty()) {
+  if (opts::OutputFilename.empty() &&
+    !opts::SecSwiftReport &&
+    !opts::PrintCFG) {
     errs() << ToolName << ": expected -o=<output file> option.\n";
     exit(1);
   }
@@ -263,9 +278,17 @@ int main(int argc, char **argv) {
         errs() << ToolName << ": missing required -perfdata option.\n";
         exit(1);
       }
+      
+      if (opts::SecSwiftReport) {
+         if (Error E = RI.runSecSwiftReportPass()) {
+            report_error(opts::InputFilename, std::move(E));
+         }
+         return EXIT_SUCCESS;
+      }
 
       if (Error E = RI.run())
-        report_error(opts::InputFilename, std::move(E));
+         report_error(opts::InputFilename, std::move(E));
+
     } else if (auto *O = dyn_cast<MachOObjectFile>(&Binary)) {
       auto MachORIOrErr = MachORewriteInstance::create(O, ToolPath);
       if (Error E = MachORIOrErr.takeError())

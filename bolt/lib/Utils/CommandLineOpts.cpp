@@ -137,6 +137,12 @@ cl::opt<bool>
 cl::opt<bool> Lite("lite", cl::desc("skip processing of cold functions"),
                    cl::cat(BoltCategory));
 
+cl::opt<bool> SecSwiftReport(
+    "secswift-report",
+    cl::desc("Generate a SecSwift security analysis report"),
+    cl::init(false),
+    cl::cat(BoltCategory));
+
 cl::opt<std::string>
 OutputFilename("o",
   cl::desc("<output file>"),
@@ -206,6 +212,11 @@ cl::opt<unsigned>
     Verbosity("v", cl::desc("set verbosity level for diagnostic output"),
               cl::init(0), cl::ZeroOrMore, cl::cat(BoltCategory),
               cl::sub(cl::SubCommand::getAll()));
+
+cl::opt<bool> PrintCFG("print-cfg",
+  cl::desc("Print the control flow graph for each function"),
+  cl::init(false),
+  cl::cat(BoltCategory));
 
 bool processAllFunctions() {
   if (opts::AggregateOnly)

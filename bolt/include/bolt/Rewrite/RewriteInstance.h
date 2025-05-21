@@ -63,6 +63,9 @@ public:
   /// Run all the necessary steps to read, optimize and rewrite the binary.
   Error run();
 
+  /// Run the SecSwift analysis/report pass if -secswift-report is enabled
+  Error runSecSwiftReportPass();
+
   /// Diff this instance against another one. Non-const since we may run passes
   /// to fold identical functions.
   void compare(RewriteInstance &RI2);
@@ -83,6 +86,9 @@ public:
   const ProfileReaderBase *getProfileReader() const {
     return ProfileReader.get();
   }
+
+  llvm::object::Binary *getFile() const { return InputFile; }
+
 
 private:
   /// Populate array of binary functions and other objects of interest

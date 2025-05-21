@@ -204,7 +204,7 @@ public:
 
     switch (Inst.getOpcode()) {
     default:
-      llvm_unreachable("unsupported tail call opcode");
+      return false;
     case RISCV::JAL:
     case RISCV::JALR:
     case RISCV::C_J:
@@ -218,11 +218,12 @@ public:
 
   void createReturn(MCInst &Inst) const override {
     // TODO "c.jr ra" when RVC is enabled
-    Inst.setOpcode(RISCV::JALR);
     Inst.clear();
+    Inst.setOpcode(RISCV::JALR);
     Inst.addOperand(MCOperand::createReg(RISCV::X0));
     Inst.addOperand(MCOperand::createReg(RISCV::X1));
     Inst.addOperand(MCOperand::createImm(0));
+    
   }
 
   void createUncondBranch(MCInst &Inst, const MCSymbol *TBB,
@@ -350,7 +351,12 @@ public:
   }
 
   const MCSymbol *getTargetSymbol(const MCInst &Inst,
-                                  unsigned OpNum = 0) const override {
+    unsigned OpNum = 0) const override {
+    if (Inst.getNumOperands() <= OpNum) {
+      LLVM_DEBUG(dbgs() << "BOLT-DEBUG: getTargetSymbol — operand index " << OpNum << " is out of bounds\n");
+      return nullptr;
+    }
+
     if (!OpNum && !getSymbolRefOperandNum(Inst, OpNum))
       return nullptr;
 
@@ -360,6 +366,7 @@ public:
 
     return getTargetSymbol(Op.getExpr());
   }
+
 
   bool lowerTailCall(MCInst &Inst) override {
     removeAnnotation(Inst, MCPlus::MCAnnotation::kTailCall);

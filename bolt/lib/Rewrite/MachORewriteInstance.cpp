@@ -5,6 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#include "bolt/Utils/CommandLineOpts.h"
 
 #include "bolt/Rewrite/MachORewriteInstance.h"
 #include "bolt/Core/BinaryContext.h"
@@ -47,7 +48,7 @@ extern cl::opt<bool> PrintNormalized;
 extern cl::opt<bool> PrintReordered;
 extern cl::opt<bool> PrintSections;
 extern cl::opt<bool> PrintDisasm;
-extern cl::opt<bool> PrintCFG;
+
 extern cl::opt<std::string> RuntimeInstrumentationLib;
 extern cl::opt<unsigned> Verbosity;
 } // namespace opts

@@ -1,3 +1,9 @@
+message(STATUS "⚡️ Début du CMakeLists.txt de RuntimeLibs ⚡️")
+
+get_property(exp_targets GLOBAL PROPERTY ENABLED_EXPORTS)
+message(STATUS "Current EXPORTS before RuntimeLibs: ${exp_targets}")
+
+
 set(LLVM_LINK_COMPONENTS
   BinaryFormat
   JITLink
@@ -20,3 +26,6 @@ target_link_libraries(LLVMBOLTRuntimeLibs
   LLVMBOLTPasses
   LLVMBOLTUtils
   )
+
+
+#install(TARGETS LLVMBOLTRuntimeLibs EXPORT LLVMExports DESTINATION "lib${LLVM_LIBDIR_SUFFIX}")

@@ -10,7 +10,7 @@ set(LLVM_LINK_COMPONENTS
   DWARFLinkerClassic
   AsmPrinter
   TargetParser
-  )
+)
 
 add_llvm_library(LLVMBOLTRewrite
   BinaryPassManager.cpp
@@ -30,7 +30,7 @@ add_llvm_library(LLVMBOLTRewrite
 
   LINK_LIBS
   ${LLVM_PTHREAD_LIB}
-  )
+)
 
 target_link_libraries(LLVMBOLTRewrite
   PRIVATE
@@ -39,10 +39,14 @@ target_link_libraries(LLVMBOLTRewrite
   LLVMBOLTProfile
   LLVMBOLTRuntimeLibs
   LLVMBOLTUtils
-  )
+)
 
 foreach (tgt ${BOLT_TARGETS_TO_BUILD})
   target_link_libraries(LLVMBOLTRewrite PRIVATE LLVMBOLTTarget${tgt})
   string(TOUPPER "${tgt}" upper)
   target_compile_definitions(LLVMBOLTRewrite PRIVATE ${upper}_AVAILABLE)
 endforeach()
+
+
+#install(TARGETS LLVMBOLTRewrite EXPORT LLVMExports DESTINATION "lib${LLVM_LIBDIR_SUFFIX}")
+
