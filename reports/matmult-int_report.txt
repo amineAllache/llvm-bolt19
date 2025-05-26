@@ -1,0 +1,9 @@
+[SecSwift] 🔍 Starting function analysis...
+[SecSwift] ✅ Found symbol: _SECSWIFT_benchmark_body at address: 0x408cd8
+[SecSwift] ✅ Found symbol: _SECSWIFT_safe_memcpy at address: 0x409828
+[SecSwift] ✅ Found symbol: _SECSWIFT_safe_memcmp at address: 0x4097c4
+[SecSwift] ✅ Found symbol: _SECSWIFT_EmbenchIOTCounter at address: 0xe20
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_cycle_start at address: 0xe24
+[SecSwift] ✅ Found symbol: _SECSWIFT_Seed at address: 0xe1c
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_cycle_stop at address: 0xe28
+[SecSwift] 📝 Total _SECSWIFT_ symbols found: 7

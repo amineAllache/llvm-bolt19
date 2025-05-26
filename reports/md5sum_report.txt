@@ -1,0 +1,22 @@
+[SecSwift] 🔍 Starting function analysis...
+[SecSwift] ✅ Found symbol: _SECSWIFT_h0 at address: 0xbdc
+[SecSwift] ✅ Found symbol: _SECSWIFT_h1 at address: 0xbe0
+[SecSwift] ✅ Found symbol: _SECSWIFT_h2 at address: 0xbe4
+[SecSwift] ✅ Found symbol: _SECSWIFT_h3 at address: 0xbe8
+[SecSwift] ✅ Found symbol: _SECSWIFT_safe_memcpy at address: 0x4093c8
+[SecSwift] ✅ Found symbol: _SECSWIFT_r at address: 0x308
+[SecSwift] ✅ Found symbol: _SECSWIFT_k at address: 0x108
+[SecSwift] ✅ Found symbol: _SECSWIFT_benchmark_body at address: 0x409480
+[SecSwift] ✅ Found symbol: _SECSWIFT_seed at address: 0xbec
+[SecSwift] ✅ Found symbol: _SECSWIFT_heap_ptr at address: 0xbf0
+[SecSwift] ✅ Found symbol: _SECSWIFT_heap_end at address: 0xbf4
+[SecSwift] ✅ Found symbol: _SECSWIFT_heap_requested at address: 0xbf8
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_overhead at address: 0xc08
+[SecSwift] ✅ Found symbol: _SECSWIFT_init_heap_beebs at address: 0x4097c0
+[SecSwift] ✅ Found symbol: _SECSWIFT_md5 at address: 0x408b70
+[SecSwift] ✅ Found symbol: _SECSWIFT_malloc_beebs at address: 0x409874
+[SecSwift] ✅ Found symbol: _SECSWIFT_EmbenchIOTCounter at address: 0xbfc
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_cycle_start at address: 0xc00
+[SecSwift] ✅ Found symbol: _SECSWIFT_calloc_beebs at address: 0x409a14
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_cycle_stop at address: 0xc04
+[SecSwift] 📝 Total _SECSWIFT_ symbols found: 20

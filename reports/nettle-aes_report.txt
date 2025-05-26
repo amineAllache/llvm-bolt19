@@ -1,0 +1,11 @@
+[SecSwift] 🔍 Starting function analysis...
+[SecSwift] ✅ Found symbol: _SECSWIFT_mtable at address: 0x1878
+[SecSwift] ✅ Found symbol: _SECSWIFT_benchmark_body at address: 0x40b7f4
+[SecSwift] ✅ Found symbol: _SECSWIFT__aes_set_key at address: 0x408d4c
+[SecSwift] ✅ Found symbol: _SECSWIFT_expected at address: 0x3648
+[SecSwift] ✅ Found symbol: _SECSWIFT_plaintext at address: 0x3448
+[SecSwift] ✅ Found symbol: _SECSWIFT_EmbenchIOTCounter at address: 0x3924
+[SecSwift] ✅ Found symbol: _SECSWIFT_aes_encrypt at address: 0x40986c
+[SecSwift] ✅ Found symbol: _SECSWIFT__nettle_aes_invert at address: 0x409330
+[SecSwift] ✅ Found symbol: _SECSWIFT_aes_decrypt at address: 0x40a78c
+[SecSwift] 📝 Total _SECSWIFT_ symbols found: 9

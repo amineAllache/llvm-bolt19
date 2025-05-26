@@ -1,0 +1,10 @@
+[SecSwift] 🔍 Starting function analysis...
+[SecSwift] ✅ Found symbol: _SECSWIFT_safe_memcpy at address: 0x40c2b4
+[SecSwift] ✅ Found symbol: _SECSWIFT_sha256_write_digest at address: 0x40c804
+[SecSwift] ✅ Found symbol: _SECSWIFT_safe_memset at address: 0x40d3b4
+[SecSwift] ✅ Found symbol: _SECSWIFT_benchmark_body at address: 0x40d16c
+[SecSwift] ✅ Found symbol: _SECSWIFT__nettle_sha256_compress at address: 0x408b40
+[SecSwift] ✅ Found symbol: _SECSWIFT_hash at address: 0x838
+[SecSwift] ✅ Found symbol: _SECSWIFT_sha256_update at address: 0x40c32c
+[SecSwift] ✅ Found symbol: _SECSWIFT_EmbenchIOTCounter at address: 0xa34
+[SecSwift] 📝 Total _SECSWIFT_ symbols found: 8

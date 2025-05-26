@@ -1,0 +1,25 @@
+[SecSwift] 🔍 Starting function analysis...
+[SecSwift] ✅ Found symbol: _SECSWIFT_sglib___rbtree_add_recursive at address: 0x409e68
+[SecSwift] ✅ Found symbol: _SECSWIFT_array at address: 0x328
+[SecSwift] ✅ Found symbol: _SECSWIFT_safe_memcmp at address: 0x40afb4
+[SecSwift] ✅ Found symbol: _SECSWIFT_benchmark_body at address: 0x40b05c
+[SecSwift] ✅ Found symbol: _SECSWIFT_safe_memcpy at address: 0x40cf10
+[SecSwift] ✅ Found symbol: _SECSWIFT_seed at address: 0xe8c
+[SecSwift] ✅ Found symbol: _SECSWIFT_heap_ptr at address: 0xe90
+[SecSwift] ✅ Found symbol: _SECSWIFT_heap_end at address: 0xe94
+[SecSwift] ✅ Found symbol: _SECSWIFT_heap_requested at address: 0xe98
+[SecSwift] ✅ Found symbol: _SECSWIFT_sglib_dllist_sort at address: 0x408ec8
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_overhead at address: 0xea8
+[SecSwift] ✅ Found symbol: _SECSWIFT_sglib_ilist_it_init_on_equal at address: 0x4095f4
+[SecSwift] ✅ Found symbol: _SECSWIFT_init_heap_beebs at address: 0x40cf70
+[SecSwift] ✅ Found symbol: _SECSWIFT_sglib_dllist_get_first at address: 0x408de0
+[SecSwift] ✅ Found symbol: _SECSWIFT__startStack_ at address: 0xab0
+[SecSwift] ✅ Found symbol: _SECSWIFT_sglib_hashed_ilist_find_member at address: 0x4098e0
+[SecSwift] ✅ Found symbol: _SECSWIFT_malloc_beebs at address: 0x40d074
+[SecSwift] ✅ Found symbol: _SECSWIFT_EmbenchIOTCounter at address: 0xe9c
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_cycle_start at address: 0xea0
+[SecSwift] ✅ Found symbol: _SECSWIFT_TH_aui32_cycle_stop at address: 0xea4
+[SecSwift] ✅ Found symbol: _SECSWIFT_sglib__rbtree_it_compute_current_elem at address: 0x40a64c
+[SecSwift] ✅ Found symbol: _SECSWIFT_sglib_hashed_ilist_it_next at address: 0x409a68
+[SecSwift] ✅ Found symbol: _SECSWIFT__endStack_ at address: 0xbb0
+[SecSwift] 📝 Total _SECSWIFT_ symbols found: 23
