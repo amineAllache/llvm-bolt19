@@ -1,0 +1,15 @@
+/build*
+/build-*
+/out*
+/bin
+*.o
+*.a
+*.so
+*.exe
+*.dll
+*.obj
+*.log
+*.pyc
+*.swp
+CMakeCache.txt
+CMakeFiles/
