@@ -1,0 +1,5 @@
+# ninja log v5
+24	385	1748245231268036194	CMakeFiles/bolt_rt_hugify.dir/hugify.cpp.o	f2daf98a06797c4f
+385	745	1748245231631510109	/home/amine/build/bolt-fresh/lib/libbolt_rt_hugify.a	adacf9a3e272e702
+0	3616	1748245234512445953	CMakeFiles/bolt_rt_instr.dir/instr.cpp.o	92d0fbc00fa44a22
+3616	3996	1748245234884463198	/home/amine/build/bolt-fresh/lib/libbolt_rt_instr.a	5333f3c5bfe26fcb

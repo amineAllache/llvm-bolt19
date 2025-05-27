@@ -1,0 +1,1 @@
+cmd='/usr/bin/cmake;-DCMAKE_C_COMPILER=/usr/bin/cc;-DCMAKE_CXX_COMPILER=/usr/bin/c++;-DCMAKE_BUILD_TYPE=Release;-DCMAKE_MAKE_PROGRAM=/usr/bin/ninja;-DLLVM_LIBDIR_SUFFIX=;-DLLVM_LIBRARY_DIR=/home/amine/build/bolt-fresh/./lib;-GNinja;<SOURCE_DIR><SOURCE_SUBDIR>'
